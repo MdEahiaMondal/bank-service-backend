@@ -15,3 +15,8 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
 });
+
+
+Route::group(['namespace' => 'Api\V1'], function (){
+    Route::apiResource('banks', 'BankController');
+});
