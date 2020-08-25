@@ -2,11 +2,22 @@
 
 namespace App\Exceptions;
 
+use App\Traits\apiResponser;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
+    use  apiResponser;
     /**
      * A list of the exception types that are not reported.
      *
@@ -50,6 +61,97 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof ValidationException) // validation errors
+        {
+            return $this->convertValidationExceptionToResponse($exception, $request);
+        }
+        if ($exception instanceof ModelNotFoundException) // model error(if search like user model but does not exist any result)
+        {
+            $model_name = strtolower(class_basename($exception->getModel()));
+            return  $this->errorResponse("Does not exist {$model_name} with the specified identificator", 404);
+        }
+        if ($exception instanceof AuthenticationException) // who does not register user in our system
+        {
+            return  $this->unauthenticated($request, $exception);
+        }
+        if ($exception instanceof AuthorizationException) // who is register user but does not permission some system
+        {
+            return  $this->errorResponse($exception->getMessage(), 403);
+        }
+        if ($exception instanceof MethodNotAllowedHttpException) // if method not found
+        {
+            return  $this->errorResponse('The specified method for the request is invalid', 405);
+        }
+        if ($exception instanceof NotFoundHttpException){ // url wrong
+            return  $this->errorResponse('The specified url can not be found', 404);
+        }
+        if ($exception instanceof HttpException) // any type of incoming http exception which we not know what is this.(any other kind of http exception)
+        {
+            return  $this->errorResponse($exception->getMessage(), $exception->getStatusCode());
+        }
+
+        if($exception instanceof TokenMismatchException){ // if you  use frontend web service then need csrf security for form submit then it will work
+            return redirect()->back()->withInput($request->input());
+        }
+
+        // database related
+        if ($exception instanceof QueryException){
+            $error_code = $exception->errorInfo[1];
+            if ($error_code === 1451)
+            {
+                return  $this->errorResponse('Cannot remove this resource permanently.It is related with any other resource', 409);
+            }
+
+        }
+
         return parent::render($request, $exception);
+        /* if (config('APP_DEBUG')){
+             return parent::render($request, $exception);
+         }*/
+//        return  $this->errorResponse('Unexpected Exception. Try later',500); // database connection problem or when you are develop your site
     }
+
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        return $request->expectsJson()
+            ? $this->errorResponse('Unauthenticated', 401)
+            : redirect()->guest($exception->redirectTo() ?? route('login'));
+    }
+
+    /**
+     * Create a response object from the given validation exception.
+     *
+     * @param  \Illuminate\Validation\ValidationException  $e
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function convertValidationExceptionToResponse(ValidationException $e, $request)
+    {
+        if ($e->response) {
+            return $e->response;
+        }
+        return $request->expectsJson()
+            ? $this->invalidJson($request, $e)
+            : $this->invalid($request, $e); // same work 1
+    }
+
+    protected function invalidJson($request, ValidationException $exception)
+    {
+        if ($this->isFrontendWeb($request)) // same work 1
+        {
+            return $request->ajax() ? response()->json($exception->errors(), 422) : redirect()
+                ->back()
+                ->withInput($request->input())
+                ->withErrors($exception->errors());
+
+        }
+        return $this->errorResponse($exception->errors(), 422);
+    }
+
+
+    protected function isFrontendWeb($request){
+        return $request->acceptsHtml() && collect($request->route()->middleware())->contains('web');
+    }
+
 }

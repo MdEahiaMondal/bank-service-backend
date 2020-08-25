@@ -17,6 +17,12 @@ class AuthController extends ApiController
 
     public function login(Request $request)
     {
+
+        $this->validate($request, [
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+
         $credentials = $request->only('email', 'password');
 
         if ($token = $this->guard()->attempt($credentials)) {
@@ -24,13 +30,12 @@ class AuthController extends ApiController
         }
 
         return  $this->errorResponse('Unauthorized', 401);
-//        return response()->json(['error' => 'Unauthorized'], 401);
     }
 
 
     public function me()
     {
-        return response()->json($this->guard()->user());
+        return $this->showDataResponse('user', $this->guard()->user());
     }
 
 
