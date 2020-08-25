@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Models\CardOrLone;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class CardOrLoneController extends Controller
+class SliderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,16 +13,6 @@ class CardOrLoneController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
     {
         //
     }
@@ -41,21 +31,10 @@ class CardOrLoneController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\CardOrLone  $cardOrLone
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(CardOrLone $cardOrLone)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\CardOrLone  $cardOrLone
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(CardOrLone $cardOrLone)
+    public function show($id)
     {
         //
     }
@@ -64,10 +43,10 @@ class CardOrLoneController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CardOrLone  $cardOrLone
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CardOrLone $cardOrLone)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -75,10 +54,10 @@ class CardOrLoneController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\CardOrLone  $cardOrLone
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CardOrLone $cardOrLone)
+    public function destroy($id)
     {
         //
     }
