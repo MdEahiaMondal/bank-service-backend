@@ -19,15 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="70288674-26c8-4793-b583-3de79fd36b42" name="Default Changelist" comment="jwt implement success">
-      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/CardOrLoneController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/CardOrLone.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/factories/CardOrLoneFactory.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2020_08_25_093918_create_card_or_loans_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/seeds/CardOrLoneSeeder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" afterDir="false" />
-    </list>
+    <list default="true" id="70288674-26c8-4793-b583-3de79fd36b42" name="Default Changelist" comment="scheme make" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -198,7 +190,14 @@
       <option name="project" value="LOCAL" />
       <updated>1598331124834</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="scheme make">
+      <created>1598356696031</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1598356696031</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -219,7 +218,8 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="jwt implement success" />
-    <option name="LAST_COMMIT_MESSAGE" value="jwt implement success" />
+    <MESSAGE value="scheme make" />
+    <option name="LAST_COMMIT_MESSAGE" value="scheme make" />
   </component>
   <component name="WindowStateProjectService">
     <state x="301" y="71" key="NewPhpClassDialog" timestamp="1598327987966">
