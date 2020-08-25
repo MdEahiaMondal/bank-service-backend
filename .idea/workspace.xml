@@ -20,11 +20,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70288674-26c8-4793-b583-3de79fd36b42" name="Default Changelist" comment="jwt implement success">
+<<<<<<< HEAD
       <change afterPath="$PROJECT_DIR$/database/migrations/2020_08_25_110245_create_bank_card_types_table.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/database/migrations/2020_08_25_110815_create_bank_admins_table.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/database/migrations/2020_08_25_115952_create_sliders_table.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/migrations/2020_08_25_074950_create_banks_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2020_08_25_074950_create_banks_table.php" afterDir="false" />
+=======
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/CardOrLoneController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/CardOrLone.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/factories/CardOrLoneFactory.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2020_08_25_093918_create_card_or_loans_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/seeds/CardOrLoneSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" afterDir="false" />
+>>>>>>> 559f44eef4104f1b410f5f75b7a0d3dab396fa12
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -165,12 +175,6 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.detected.package.tslint" value="true" />
-    <property name="node.js.path.for.package.eslint" value="project" />
-    <property name="node.js.path.for.package.tslint" value="project" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
   </component>
   <component name="RecentsManager">
@@ -197,7 +201,10 @@
       <updated>1598324726483</updated>
       <workItem from="1598324727612" duration="3170000" />
       <workItem from="1598329586309" duration="3121000" />
+<<<<<<< HEAD
       <workItem from="1598338197900" duration="7423000" />
+=======
+>>>>>>> 559f44eef4104f1b410f5f75b7a0d3dab396fa12
     </task>
     <task id="LOCAL-00001" summary="jwt implement success">
       <created>1598331124834</created>
