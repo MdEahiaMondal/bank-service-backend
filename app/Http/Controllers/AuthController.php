@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRegisterRequest;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends ApiController
 {
@@ -11,13 +14,26 @@ class AuthController extends ApiController
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+    }
+
+
+    public function register(UserRegisterRequest  $request){
+
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+
+            if ($user->save()){
+                return $this->login($request);
+            }
+
     }
 
 
     public function login(Request $request)
     {
-
         $this->validate($request, [
             'email' => 'required',
             'password' => 'required',
@@ -55,9 +71,11 @@ class AuthController extends ApiController
     protected function respondWithToken($token)
     {
         return response()->json([
+            'success' => true,
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => $this->guard()->factory()->getTTL() * 60
+            'expires_in' => $this->guard()->factory()->getTTL() * 60,
+            'user' => $this->guard()->user()
         ]);
     }
 
