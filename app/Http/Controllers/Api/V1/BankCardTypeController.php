@@ -2,63 +2,58 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BankCardTypesRequest;
+use App\Models\BankCardType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class BankCardTypeController extends Controller
+class BankCardTypeController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        //
+        $bank_card_types = BankCardType::paginate(10);
+        return $this->showDataResponse('bank_card_types', $bank_card_types);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(BankCardTypesRequest $request)
     {
-        //
+        $request['name'] = $request->name;
+        $request['created_by'] = Auth::id() ?? 0;
+        $request['updated_by'] = Auth::id() ?? 0;
+        $request['status'] = $request->status ?? 0;
+
+        $only = $request->only('name', 'created_by', 'updated_by', 'status');
+
+        $bank_card_type = BankCardType::create($only);
+        if ($bank_card_type->save()){
+            return $this->showDataResponse('bank_card_type', $bank_card_type, 201);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show(BankCardType $bankCardType)
     {
-        //
+        return $this->showDataResponse('bankCardType', $bankCardType, 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(BankCardTypesRequest $request, BankCardType $bankCardType)
     {
-        //
+        $request['name'] = $request->name;
+        $request['created_by'] = Auth::id() ?? 0;
+        $request['updated_by'] = Auth::id() ?? 0;
+        $request['status'] = $request->status ?? 0;
+
+        $only = $request->only('name', 'created_by', 'updated_by', 'status');
+        $bankCardType->update($only);
+
+        return $this->showDataResponse('bankTypeCard', $bankCardType, 201);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(BankCardType $bankCardType)
     {
-        //
+        $bankCardType->delete();
+        return $this->successResponse('Bank card type delete success');
     }
 }
