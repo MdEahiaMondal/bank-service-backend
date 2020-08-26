@@ -2,63 +2,83 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Controllers\ApiController;
+use App\Http\Controllers\CommonController;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SlidersRequest;
+use App\Models\Slider;
 use Illuminate\Http\Request;
-
-class SliderController extends Controller
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+class SliderController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        //
+        $sliders = Slider::paginate(10);
+        return $this->showDataResponse('sliders',$sliders);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function store(SlidersRequest $request)
     {
-        //
+
+        $slug = Str::slug($request->title);
+        if ($request->hasFile('img')) {
+
+            $image = $request->file('img');
+            $image_name = CommonController::fileUploaded(
+                $slug, false, $image,'sliders', ['width' => '1600', 'height' => '1066']
+            );
+            $request['image'] = $image_name;
+        }
+        $request['created_by'] = Auth::id() ?? 0;
+        $request['updated_by'] = Auth::id() ?? 0;
+        $request['status'] = $request->status ?? 0;
+
+       $only =  $request->only('title', 'image', 'created_by', 'updated_by', 'status');
+
+        $slider = Slider::create($only);
+
+        return $this->showDataResponse('slider', $slider, 201);
+
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show(Slider $slider)
     {
-        //
+        return $this->showDataResponse('slider', $slider, 200);
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(SlidersRequest $request, Slider $slider)
     {
-        //
+        $slug = Str::slug($request->title);
+        if ($request->hasFile('img')) {
+
+            $image = $request->file('img');
+            $image_name = CommonController::fileUploaded(
+                $slug, false, $image,'sliders', ['width' => '1600', 'height' => '1066', ], $request->image
+            );
+            $request['image'] = $image_name;
+        }else{
+            $request['image'] = $slider->image;
+        }
+        $request['updated_by'] = Auth::id() ?? 0;
+        $request['status'] = $request->status ?? 0;
+
+        $only =  $request->only('title', 'image', 'updated_by', 'status');
+
+        $slider->update($only);
+
+        return $this->showDataResponse('slider', $slider, 201);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Slider  $slider)
     {
-        //
+        if ($slider->image){
+            CommonController::deleteImage('sliders', $slider->image);
+        }
+        $slider->delete();
+        return $this->successResponse('Slider deleted success');
     }
 }

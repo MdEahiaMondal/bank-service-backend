@@ -18,4 +18,5 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
 
 Route::group(['namespace' => 'Api\V1'], function (){
     Route::apiResource('banks', 'BankController');
+    Route::apiResource('sliders', 'SliderController');
 });
