@@ -19,6 +19,7 @@ class CreateBankCardTypesTable extends Migration
             $table->string('status');
             $table->integer('created_by');
             $table->integer('updated_by');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

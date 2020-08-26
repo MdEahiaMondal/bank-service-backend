@@ -18,6 +18,9 @@ class CreateSlidersTable extends Migration
             $table->string('title', 255);
             $table->string('status');
             $table->string('image', 1024);
+            $table->integer('created_by');
+            $table->integer('updated_by');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

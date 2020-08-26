@@ -15,16 +15,15 @@ class CreateBankAdminsTable extends Migration
     {
         Schema::create('bank_admins', function (Blueprint $table) {
             $table->id();
-
-            $table->string('name', 255);
-            $table->unsignedBigInteger('bank_id');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('bank_id');
+            $table->string('name', 255);
             $table->string('designation', 255);
+            $table->float('per_user_benefit');
             $table->string('status');
             $table->integer('created_by');
             $table->integer('updated_by');
-            $table->float('per_user_benefit');
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

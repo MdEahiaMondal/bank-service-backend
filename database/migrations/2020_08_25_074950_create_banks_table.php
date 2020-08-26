@@ -17,12 +17,11 @@ class CreateBanksTable extends Migration
 
             $table->id();
             $table->string('name', 255);
-            $table->string('location', 355);
+            $table->string('location', 255);
             $table->integer('created_by');
             $table->integer('updated_by');
             $table->string('status');
-
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

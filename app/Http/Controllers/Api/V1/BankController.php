@@ -2,77 +2,62 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Controllers\ApiController;
+use App\Http\Requests\BanksRequest;
 use App\Models\Bank;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
-class BankController extends Controller
+class BankController extends ApiController
 {
 
     public function index()
     {
-        //
+        $banks = Bank::paginate(10);
+        return $this->showDataResponse('banks',$banks);
     }
 
 
-    public function create()
+    public function store(BanksRequest $request)
     {
-        //
+        $bank = new Bank();
+        $bank->name = $request->name;
+        $bank->location = $request->location;
+        $bank->created_by =  Auth::id() ?? 0;
+        $bank->updated_by =  Auth::id() ?? 0;
+        $bank->status =  $request->status ?? 0;
+        if ($bank->save()){
+            return $this->showDataResponse('bank', $bank, 201);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Bank  $bank
-     * @return \Illuminate\Http\Response
-     */
     public function show(Bank $bank)
     {
-        //
+        return $this->showDataResponse('bank', $bank, 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Bank  $bank
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Bank $bank)
+
+
+
+    public function update(BanksRequest $request, Bank $bank)
     {
-        //
+        $bank->name = $request->name;
+        $bank->location = $request->location;
+        $bank->updated_by = Auth::id() ?? 0;
+        $bank->status =  $request->status ?? 0;
+        if ($bank->save()){
+            return $this->showDataResponse('bank', $bank, 200);
+        }
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Bank  $bank
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Bank $bank)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Bank  $bank
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Bank $bank)
     {
-        //
+        $bank->delete();
+        return $this->successResponse('Bank Deleted Success');
     }
+
 }

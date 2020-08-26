@@ -25,9 +25,10 @@ class CreateUsersTable extends Migration
             $table->string('image', 1024)->nullable();
             $table->string('user_type')->default('user');
             $table->string('status')->nullable();
-            $table->integer('created_at')->nullable();
+            $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
