@@ -34,7 +34,7 @@ class BankController extends ApiController
 
     public function show(Bank $bank)
     {
-        return $this->showDataResponse('bank', $bank, 200);
+            return $this->showDataResponse('bank', $bank, 200);
     }
 
     public function update(BanksRequest $request, Bank $bank)

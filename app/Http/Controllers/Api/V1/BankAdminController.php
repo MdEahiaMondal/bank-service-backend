@@ -2,63 +2,77 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BankAdminsRequest;
+use App\Models\Bank;
+use App\Models\BankAdmin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class BankAdminController extends Controller
+
+class BankAdminController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        //
+        $bank_admins = BankAdmin::paginate(10);
+        return $this->showDataResponse('bank_admins',$bank_admins);
+
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(BankAdminsRequest $request)
     {
-        //
+        $bank = Bank::find(5);
+
+        $request['user_id'] = $request->user_id;
+        $request['bank_id'] = $bank->id;
+        $request['name'] = $request->name;
+        $request['designation'] = $request->designation;
+        $request['per_user_benefit'] = $request->per_user_benefit;
+        $request['created_by'] = Auth::id() ?? 0;
+        $request['updated_by'] = Auth::id() ?? 0;
+        $request['status'] = $request->status ?? 0;
+
+        $only =  $request->only('user_id', 'bank_id', 'name', 'designation', 'per_user_benefit', 'created_by', 'updated_by', 'status');
+
+        $bank_admin = BankAdmin::create($only);
+        if ($bank_admin->save()){
+            return $this->showDataResponse('bank_admin', $bank_admin, 201);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show(BankAdmin $bankAdmin)
     {
-        //
+        return $this->showDataResponse('bankAdmin', $bankAdmin, 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(BankAdminsRequest $request, BankAdmin $bankAdmin)
     {
-        //
+        $bank = Bank::find(5);
+
+        $request['user_id'] = $request->user_id;
+        $request['bank_id'] = $bank->id;
+        $request['name'] = $request->name;
+        $request['designation'] = $request->designation;
+        $request['per_user_benefit'] = $request->per_user_benefit;
+        $request['created_by'] = Auth::id() ?? 0;
+        $request['updated_by'] = Auth::id() ?? 0;
+        $request['status'] = $request->status ?? 0;
+
+        $only =  $request->only('user_id', 'bank_id', 'name', 'designation', 'per_user_benefit', 'created_by', 'updated_by', 'status');
+
+
+        $bankAdmin->update($only);
+
+        return $this->showDataResponse('bankAdmin', $bankAdmin, 201);
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(BankAdmin $bankAdmin)
     {
-        //
+        $bankAdmin->delete();
+        return $this->successResponse('Bank admin deleted success');
     }
+
 }
