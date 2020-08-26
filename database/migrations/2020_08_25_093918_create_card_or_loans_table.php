@@ -30,8 +30,9 @@ class CreateCardOrLoansTable extends Migration
             $table->string('bank_loan');
             $table->string('loan_limit_amount');
             $table->string('status');
-            $table->integer('created_at');
-            $table->integer('updated_at');
+            $table->integer('created_by');
+            $table->integer('updated_by');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
