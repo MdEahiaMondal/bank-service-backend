@@ -41,5 +41,22 @@ class CommonController extends Controller
         }
     }
 
+    public static function PdfFileUpload($files, $slug, $directory){
 
+        $currentDate = Carbon::now()->toDateString();
+
+        $salary_certificate_name = $slug.'-'.$currentDate.'-'.uniqid().$files['salary_certificate']->getClientOriginalExtension();
+        $job_id_card   = $slug.'-'.$currentDate.'-'.uniqid().$files['job_id_card']->getClientOriginalExtension();
+        $visiting_card = $slug.'-'.$currentDate.'-'.uniqid().$files['visiting_card']->getClientOriginalExtension();
+        $nid_card      = $slug.'-'.$currentDate.'-'.uniqid().$files['nid_card']->getClientOriginalExtension();
+
+        // check is exits directory
+        if (!Storage::disk('public')->exists($directory)){
+
+            Storage::disk('public')->makeDirectory($directory);
+        }
+
+        //move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)
+
+    }
 }

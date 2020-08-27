@@ -56,7 +56,6 @@ class BankAdminController extends ApiController
         $request['name'] = $request->name;
         $request['designation'] = $request->designation;
         $request['per_user_benefit'] = $request->per_user_benefit;
-        $request['created_by'] = Auth::id() ?? 0;
         $request['updated_by'] = Auth::id() ?? 0;
         $request['status'] = $request->status ?? 0;
 

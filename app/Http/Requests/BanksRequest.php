@@ -4,6 +4,10 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property mixed name
+ * @property mixed location
+ */
 class BanksRequest extends FormRequest
 {
     /**

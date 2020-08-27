@@ -22,5 +22,5 @@ Route::group(['namespace' => 'Api\V1'], function (){
     Route::apiResource('sliders', 'SliderController');
     Route::apiResource('bank-admins', 'BankAdminController');
     Route::apiResource('bank-card-types', 'BankCardTypeController');
-
+    Route::apiResource('card-or-loans', 'CardOrLoanController');
 });

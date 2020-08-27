@@ -41,7 +41,6 @@ class BankCardTypeController extends ApiController
     public function update(BankCardTypesRequest $request, BankCardType $bankCardType)
     {
         $request['name'] = $request->name;
-        $request['created_by'] = Auth::id() ?? 0;
         $request['updated_by'] = Auth::id() ?? 0;
         $request['status'] = $request->status ?? 0;
 
