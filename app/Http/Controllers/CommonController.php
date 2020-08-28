@@ -44,16 +44,22 @@ class CommonController extends Controller
     public static function PdfFileUpload($file, $slug, $oldFile = null){
 
         $currentDate = Carbon::now()->toDateString();
-        $directory = public_path().'/storage/Uploaded_files';
+        $directory = public_path().'/storage/Uploaded_files/';
 
-        if($file){
+
             $file_name = $slug.'-'.$currentDate.'-'.uniqid().'.'.$file->getClientOriginalExtension();
             $file->move($directory, $file_name);
 
-            if($oldFile){
-                deleteFile($oldFile, $directory);
+            if ($oldFile){
+                self::deleteFile($oldFile, $directory);
             }
+
             return $file_name;
+    }
+
+    public static function deleteFile($oldFile, $directory){
+        if($directory->exists($oldFile)){
+            $directory->delete($oldFile);
         }
     }
 }

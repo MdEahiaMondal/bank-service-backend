@@ -141,8 +141,23 @@ class CardOrLoanController extends ApiController
         return $this->showDataResponse('cardOrLoan', $cardOrLoan,201);
     }
 
-    public function destroy(CardOrLoan $cardOrLone)
+    public function destroy(CardOrLoan $cardOrLoan)
     {
-        //
+        $directory = public_path().'/storage/Uploaded_files/';
+        if ($cardOrLoan->salary_certificate) {
+            CommonController::deleteFile($cardOrLoan->salary_certificate, $directory);
+        }
+        if ($cardOrLoan->job_id_card) {
+            CommonController::deleteFile($cardOrLoan->job_id_card, $directory);
+        }
+        if ($cardOrLoan->visiting_card) {
+            CommonController::deleteFile($cardOrLoan->visiting_card, $directory);
+        }
+        if ($cardOrLoan->nid_card) {
+            CommonController::deleteFile($cardOrLoan->nid_card, $directory);
+        }
+
+        $cardOrLoan->delete();
+        return $this->successResponse('Slider deleted success');
     }
 }

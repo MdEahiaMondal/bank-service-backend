@@ -17,6 +17,12 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
     Route::post('me', 'AuthController@me');
 });
 
+
+// without authorization user can access
+Route::post('auth/forgot-password', 'AuthController@forgotPassword');
+
+
+
 Route::group(['namespace' => 'Api\V1'], function (){
     Route::apiResource('banks', 'BankController');
     Route::apiResource('sliders', 'SliderController');
