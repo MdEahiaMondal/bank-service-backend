@@ -14,7 +14,7 @@ class AuthController extends ApiController
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'forgotPassword']]);
     }
 
 
@@ -59,6 +59,15 @@ class AuthController extends ApiController
     {
         $this->guard()->logout();
         return response()->json(['message' => 'Successfully logged out']);
+    }
+
+
+    public function forgotPassword(Request  $request)
+    {
+        $this->validate($request, [
+            'email' => 'required|email'
+        ]);
+        return $request->all();
     }
 
 

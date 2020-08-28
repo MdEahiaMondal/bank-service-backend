@@ -57,7 +57,8 @@ class SliderController extends ApiController
 
             $image = $request->file('img');
             $image_name = CommonController::fileUploaded(
-                $slug, false, $image,'sliders', ['width' => '1600', 'height' => '1066', ], $request->image
+                $slug, false, $image,'sliders', ['width' => '1600', 'height' => '1066', ],
+                $slider->image
             );
             $request['image'] = $image_name;
         }else{
