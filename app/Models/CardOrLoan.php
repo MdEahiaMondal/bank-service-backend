@@ -5,10 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * @method static paginate(int $int)
- * @method hasFile(string $string)
- */
 class CardOrLoan extends Model
 {
     use SoftDeletes;

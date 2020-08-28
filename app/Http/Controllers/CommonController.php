@@ -41,22 +41,19 @@ class CommonController extends Controller
         }
     }
 
-    public static function PdfFileUpload($files, $slug, $directory){
+    public static function PdfFileUpload($file, $slug, $oldFile = null){
 
         $currentDate = Carbon::now()->toDateString();
+        $directory = public_path().'/storage/Uploaded_files';
 
-        $salary_certificate_name = $slug.'-'.$currentDate.'-'.uniqid().$files['salary_certificate']->getClientOriginalExtension();
-        $job_id_card   = $slug.'-'.$currentDate.'-'.uniqid().$files['job_id_card']->getClientOriginalExtension();
-        $visiting_card = $slug.'-'.$currentDate.'-'.uniqid().$files['visiting_card']->getClientOriginalExtension();
-        $nid_card      = $slug.'-'.$currentDate.'-'.uniqid().$files['nid_card']->getClientOriginalExtension();
+        if($file){
+            $file_name = $slug.'-'.$currentDate.'-'.uniqid().'.'.$file->getClientOriginalExtension();
+            $file->move($directory, $file_name);
 
-        // check is exits directory
-        if (!Storage::disk('public')->exists($directory)){
-
-            Storage::disk('public')->makeDirectory($directory);
+            if($oldFile){
+                deleteFile($oldFile, $directory);
+            }
+            return $file_name;
         }
-
-        //move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)
-
     }
 }
