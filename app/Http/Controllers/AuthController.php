@@ -17,7 +17,6 @@ class AuthController extends ApiController
         $this->middleware('auth:api', ['except' => ['login', 'register', 'forgotPassword']]);
     }
 
-
     public function register(UserRegisterRequest  $request){
 
             $user = new User();
@@ -30,7 +29,6 @@ class AuthController extends ApiController
             }
 
     }
-
 
     public function login(Request $request)
     {
@@ -45,7 +43,7 @@ class AuthController extends ApiController
             return $this->respondWithToken($token);
         }
 
-        return  $this->errorResponse('Unauthorized', 401);
+        return  $this->errorResponse('Email or Password is invalid', 401);
     }
 
 

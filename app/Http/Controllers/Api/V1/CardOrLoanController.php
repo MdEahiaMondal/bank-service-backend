@@ -20,8 +20,13 @@ class CardOrLoanController extends ApiController
         return $this->showDataResponse('card_or_loans', $card_or_loans);
     }
 
-    public function store(CardOrLoansRequest $request)
+    public function store(Request $request)
     {
+
+        dd($request->all());
+
+
+
         $slug = Str::slug($request->office_name);
 
         if($request->hasFile('salary_certificate')){

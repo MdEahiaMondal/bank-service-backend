@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->text('present_address')->nullable();
             $table->text('permanent_address')->nullable();
             $table->string('image', 1024)->nullable();
-            $table->string('user_type')->default('user');
+            $table->string('user_type')->default('general-user');
             $table->string('status')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
