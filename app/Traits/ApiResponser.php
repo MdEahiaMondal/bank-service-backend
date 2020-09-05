@@ -13,8 +13,9 @@ trait ApiResponser
         ], $code);
     }
 
-      protected function showDataResponse($dataName, $data = null, $code = 200){
+      protected function showDataResponse($dataName, $data = null, $code = 200, $message = null){
         return response()->json([
+            'message' => $message,
             'success' => true,
             $dataName => $data
         ], $code);

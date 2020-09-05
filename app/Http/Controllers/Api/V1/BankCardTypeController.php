@@ -20,17 +20,14 @@ class BankCardTypeController extends ApiController
 
     public function store(BankCardTypesRequest $request)
     {
-        $request['name'] = $request->name;
         $request['created_by'] = Auth::id() ?? 0;
         $request['updated_by'] = Auth::id() ?? 0;
-        $request['status'] = $request->status ?? 0;
 
-        $only = $request->only('name', 'created_by', 'updated_by', 'status');
-
+        $only = $request->only('bank_id', 'name', 'created_by', 'updated_by', 'status');
         $bank_card_type = BankCardType::create($only);
-        if ($bank_card_type->save()){
-            return $this->showDataResponse('bank_card_type', $bank_card_type, 201);
-        }
+
+        return $this->showDataResponse('bank_card_type', $bank_card_type, 201);
+
     }
 
     public function show(BankCardType $bankCardType)

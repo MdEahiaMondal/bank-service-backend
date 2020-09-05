@@ -20,7 +20,7 @@ class CreateBanksTable extends Migration
             $table->string('location', 255);
             $table->integer('created_by');
             $table->integer('updated_by');
-            $table->string('status');
+            $table->boolean('status')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

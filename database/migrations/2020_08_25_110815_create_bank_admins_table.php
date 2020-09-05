@@ -17,12 +17,11 @@ class CreateBankAdminsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('bank_id');
-            $table->string('name', 255);
             $table->string('designation', 255);
-            $table->float('per_user_benefit');
-            $table->string('status');
-            $table->integer('created_by');
-            $table->integer('updated_by');
+            $table->float('per_user_benefit', 8,2);
+            $table->boolean('status')->nullable()->default(true);
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

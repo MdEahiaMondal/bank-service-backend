@@ -18,7 +18,6 @@ class BankCardTypesRequest extends FormRequest
         $rules = [
             'name' => 'required|string|max:255|unique:bank_card_types,name,'.$id,
         ];
-
         return $rules;
     }
 }

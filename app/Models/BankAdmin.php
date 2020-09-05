@@ -15,7 +15,6 @@ class BankAdmin extends Model
     protected $fillable = [
         'user_id',
         'bank_id',
-        'name',
         'designation',
         'per_user_benefit',
         'created_by',

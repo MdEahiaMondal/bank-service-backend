@@ -22,10 +22,8 @@ class CardOrLoanController extends ApiController
 
     public function store(Request $request)
     {
-
-        dd($request->all());
-
-
+        info($request->all());
+        return 'ok';
 
         $slug = Str::slug($request->office_name);
 

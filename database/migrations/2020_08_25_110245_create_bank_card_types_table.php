@@ -15,6 +15,7 @@ class CreateBankCardTypesTable extends Migration
     {
         Schema::create('bank_card_types', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('bank_id');
             $table->string('name', 255);
             $table->string('status');
             $table->integer('created_by');

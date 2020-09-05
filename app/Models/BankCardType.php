@@ -10,6 +10,7 @@ class BankCardType extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'bank_id',
         'name',
         'created_by',
         'updated_by',
