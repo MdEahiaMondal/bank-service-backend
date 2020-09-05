@@ -41,6 +41,10 @@ class CommonController extends Controller
         }
     }
 
+
+
+
+
     public static function PdfFileUpload($file, $slug, $oldFile = null){
 
         $currentDate = Carbon::now()->toDateString();

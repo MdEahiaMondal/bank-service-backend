@@ -24,6 +24,11 @@ class CreateBankAdminsTable extends Migration
             $table->integer('updated_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 

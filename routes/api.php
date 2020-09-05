@@ -34,6 +34,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'api'], function (){
 
     Route::apiResource('bank-admins', 'BankAdminController');
     Route::get('bank-admin/banks', 'BankAdminController@getAllBanks');
+    Route::get('bank-admins-search', 'BankAdminController@liveSearchBankAdmin');
 
     Route::apiResource('bank-card-types', 'BankCardTypeController');
     Route::apiResource('card-or-loans', 'CardOrLoanController');

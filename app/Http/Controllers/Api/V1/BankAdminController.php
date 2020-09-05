@@ -14,24 +14,28 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-
 class BankAdminController extends ApiController
 {
 
     public function index()
     {
-        $bank_admins = BankAdmin::paginate(10);
-        return $this->showDataResponse('bank_admins',$bank_admins);
+        $bank_admins = User::has('bankAdmin')
+            ->with('bankAdmin', 'bankAdmin.bank')
+            ->where('user_type', '=', 'bank-admin')
+            ->latest()
+            ->paginate(10);
+        return $this->showDataResponse('bank_admins', $bank_admins);
     }
+
     public function getAllBanks()
     {
         $banks = Bank::active()->get();
-        return $this->showDataResponse('banks',$banks);
+        return $this->showDataResponse('banks', $banks);
     }
 
     public function store(BankAdminsRequest $request)
     {
-        if ($request->hasFile('photo')){
+        if ($request->hasFile('photo')) {
             $this->validate($request, [
                 'photo' => 'nullable|mimes:jpeg,png,jpg,gif,svg|max:1024'
             ]);
@@ -50,11 +54,13 @@ class BankAdminController extends ApiController
         $request['password'] = Hash::make($request->password);
         $request['user_type'] = 'bank-admin';
         $request['status'] = 1;
-        $request['created_by'] = Auth::id() ??  1;
-        $request['updated_by'] = Auth::id() ??  1;
+        $request['created_by'] = Auth::id() ?? 1;
+        $request['updated_by'] = Auth::id() ?? 1;
+        $request['slug'] = $request->name . '-' . time();
 
         $user_only = $request->only(
             'name',
+            'slug',
             'email',
             'phone',
             'password',
@@ -72,51 +78,125 @@ class BankAdminController extends ApiController
         info($user_created);
 
         $request['user_id'] = $user_created->id;
-
-        $bank_admin_only =  $request->only(
-            'user_id',
+        $bank_admin_only = $request->only(
             'bank_id',
+            'user_id',
             'designation',
             'per_user_benefit',
             'created_by',
             'updated_by',
             'status'
         );
+        BankAdmin::create($bank_admin_only);
 
-        $bank_admin = BankAdmin::create($bank_admin_only);
+        $bank_admin = User::has('bankAdmin')
+            ->with('bankAdmin', 'bankAdmin.bank')
+            ->where(['user_type' => 'bank-admin', 'slug' => $user_created->slug])->first();
         return $this->showDataResponse('bank_admin', $bank_admin, 201, 'Bank Admin Created Success');
     }
 
-    public function show(BankAdmin $bankAdmin)
+
+    public function show($slug)
     {
-        return $this->showDataResponse('bankAdmin', $bankAdmin, 200);
+        $bank_admin = User::has('bankAdmin')
+            ->with('bankAdmin', 'bankAdmin.bank')
+            ->where('user_type', '=', 'bank-admin')
+            ->where('slug', '=', $slug)->first();
+        if ($bank_admin) {
+            return $this->showDataResponse('bank_admin', $bank_admin);
+        } else {
+            return $this->errorResponse('Not Found', 404);
+        }
     }
 
-    public function update(BankAdminsRequest $request, BankAdmin $bankAdmin)
+
+    public function update(BankAdminsRequest $request, $slug)
     {
-        $bank = Bank::find(5);
+        $bank_admin = User::has('bankAdmin')
+            ->with('bankAdmin', 'bankAdmin.bank')
+            ->where(['user_type' => 'bank-admin', 'slug' => $slug])->first();
 
-        $request['user_id'] = $request->user_id;
-        $request['bank_id'] = $bank->id;
-        $request['name'] = $request->name;
-        $request['designation'] = $request->designation;
-        $request['per_user_benefit'] = $request->per_user_benefit;
-        $request['updated_by'] = Auth::id() ?? 0;
-        $request['status'] = $request->status ?? 0;
+        if ($bank_admin) {
 
-        $only =  $request->only('user_id', 'bank_id', 'name', 'designation', 'per_user_benefit', 'created_by', 'updated_by', 'status');
+            if ($request->hasFile('photo')) {
+                $this->validate($request, [
+                    'photo' => 'nullable|mimes:jpeg,png,jpg,gif,svg|max:1024'
+                ]);
+            }
 
+            $slug = Str::slug($request->name);
+            if ($request->hasFile('photo')) {
+                $image = $request->file('photo');
+                $image_name = CommonController::fileUploaded(
+                    $slug, false, $image, 'bank_admins', ['width' => '128', 'height' => '128']
+                );
+                $request['image'] = $image_name;
+                if ($bank_admin->image) {
+                    CommonController::deleteImage('bank_admins', $bank_admin->image);
+                }
+            }
 
-        $bankAdmin->update($only);
+            $request['updated_by'] = Auth::id() ?? 1;
 
-        return $this->showDataResponse('bankAdmin', $bankAdmin, 201);
+            $user_only = $request->only(
+                'name',
+                'email',
+                'phone',
+                'present_address',
+                'permanent_address',
+                'image',
+                'updated_by'
+            );
 
+            $bank_admin->update($user_only);
+
+            // updated related table
+            $bank_admin->bankAdmin->bank_id = $request->bank_id;
+            $bank_admin->bankAdmin->designation = $request->designation;
+            $bank_admin->bankAdmin->per_user_benefit = $request->per_user_benefit;
+            $bank_admin->bankAdmin->updated_by = $request->updated_by;
+            $bank_admin->bankAdmin->save();
+
+            return $this->showDataResponse('bank_admin', $bank_admin, 200, 'Bank Admin updated success');
+
+        } else {
+            return $this->errorResponse('Not Found', 404);
+        }
     }
 
-    public function destroy(BankAdmin $bankAdmin)
+
+    public function destroy($slug)
     {
-        $bankAdmin->delete();
-        return $this->successResponse('Bank admin deleted success');
+        $bank_admin = User::has('bankAdmin')
+            ->with('bankAdmin', 'bankAdmin.bank')
+            ->where(['user_type' => 'bank-admin', 'slug' => $slug])->first();
+        if ($bank_admin) {
+            if ($bank_admin->image) {
+                CommonController::deleteImage('bank_admins', $bank_admin->image);
+            }
+            $bank_admin->delete();
+            return $this->successResponse('Bank admin deleted success');
+        } else {
+            return $this->errorResponse('Not Found', 404);
+        }
     }
+
+    public function liveSearchBankAdmin(Request $request)
+    {
+        $search_text = $request->text;
+        $search_result = User::has('bankAdmin')->with(['bankAdmin' =>  function ($query) use($search_text){
+            $query->where('per_user_benefit', $search_text)->with('bank');
+        }])
+        ->where('user_type', 'bank-admin')
+        ->latest()
+        ->paginate(10);
+        return $this->showDataResponse('bank_admins', $search_result);
+
+        /* ->orWhere('name', 'like', '%' .  $search_text . '%')
+        ->orWhere('phone', 'like', '%' . $search_text . '%')
+        ->orWhere('email', 'like', '%' . $search_text . '%')
+        ->orWhere('name', 'like', '%' .  $search_text . '%')*/
+    }
+
 
 }
