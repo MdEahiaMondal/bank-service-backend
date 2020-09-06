@@ -31,6 +31,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'api'], function (){
     Route::get('banks-paginate', 'BankController@getAllbanksPaginate');
 
     Route::apiResource('sliders', 'SliderController');
+    Route::get('slider-status/{slug}', 'SliderController@changeStatus');
+    Route::get('sliders-search', 'SliderController@liveSearchSlider');
 
     Route::apiResource('bank-admins', 'BankAdminController');
     Route::get('bank-admin/banks', 'BankAdminController@getAllBanks');

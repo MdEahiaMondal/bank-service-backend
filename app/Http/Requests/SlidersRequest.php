@@ -17,15 +17,14 @@ class SlidersRequest extends FormRequest
     {
         $rules = [
             'title' => 'required|max:255',
-
         ];
         if (request()->isMethod('post'))
         {
-            $rules['img'] = 'required|mimes:jpg,jpeg,bmp,png,gif,svg';
+            $rules['photo'] = 'required|mimes:jpg,jpeg,bmp,png,gif,svg';
         }
         if (request()->isMethod('put') || request()->isMethod('patch'))
         {
-            $rules['img'] = 'nullable|mimes:jpg,jpeg,bmp,png,gif,svg';
+            $rules['photo'] = 'nullable|mimes:jpg,jpeg,bmp,png,gif,svg';
         }
         return $rules;
     }
