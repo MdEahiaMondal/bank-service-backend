@@ -14,9 +14,9 @@ class BankCardTypesRequest extends FormRequest
 
     public function rules()
     {
-        $id = isset($this->bankCardTypeController) ? $this->bankCardTypeController->id : null;
         $rules = [
-            'name' => 'required|string|max:255|unique:bank_card_types,name,'.$id,
+            'name' => 'required|string|max:255',
+            'bank_id' => 'required|integer',
         ];
         return $rules;
     }

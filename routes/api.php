@@ -8,7 +8,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-
 Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
     Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
@@ -22,22 +21,43 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
 Route::post('auth/forgot-password', 'AuthController@forgotPassword');
 
 
+Route::group(['namespace' => 'Api\V1', 'middleware' => 'api'], function () {
 
-Route::group(['namespace' => 'Api\V1', 'middleware' => 'api'], function (){
+/*start supper admin work*/
 
-    Route::apiResource('banks', 'BankController');
-    Route::get('banks/status/{id}', 'BankController@changeStatus');
+    // start bank
+    Route::resource('banks', 'BankController')->scoped(['bank' => 'slug'])->except(['create']);
+    Route::get('banks/status-change/{slug}', 'BankController@changeStatus')->name(' banks.status');
     Route::get('banks-search', 'BankController@liveSearchBanks');
-    Route::get('banks-paginate', 'BankController@getAllbanksPaginate');
 
+
+
+
+
+
+
+
+    Route::apiResource('banks.cards', 'BankCardTypeController');
+
+    /*;
+    Route::get('banks-paginate', 'BankController@getAllbanksPaginate');*/
+
+    // start slider
     Route::apiResource('sliders', 'SliderController');
     Route::get('slider-status/{slug}', 'SliderController@changeStatus');
     Route::get('sliders-search', 'SliderController@liveSearchSlider');
 
+    // start bank admin
     Route::apiResource('bank-admins', 'BankAdminController');
     Route::get('bank-admin/banks', 'BankAdminController@getAllBanks');
     Route::get('bank-admins-search', 'BankAdminController@liveSearchBankAdmin');
 
-    Route::apiResource('bank-card-types', 'BankCardTypeController');
+    // start bank card type
+//    Route::apiResource('bank-card-types', 'BankCardTypeController');
+
     Route::apiResource('card-or-loans', 'CardOrLoanController');
+
+
+    /*end supper admin work*/
+
 });

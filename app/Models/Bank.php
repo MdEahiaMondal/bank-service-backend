@@ -5,6 +5,7 @@ namespace App\Models;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @method static create(array $only)
@@ -17,18 +18,27 @@ class Bank extends Model
 
     protected $fillable = [
         'name',
+        'slug',
+        'image',
         'location',
         'created_by',
         'updated_by',
         'status',
     ];
 
+
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute(){
+        return  url('/') . Storage::url( 'banks/'.$this->image);
+    }
+
     public function bankCards()
     {
         return $this->hasMany(BankCardType::class);
     }
 
-    public function user()
+    public function createdUser()
     {
         return $this->belongsTo(User::class, 'created_by');
     }

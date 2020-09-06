@@ -14,7 +14,7 @@ class BankCardTypeController extends ApiController
 
     public function index()
     {
-        $bank_card_types = BankCardType::paginate(10);
+        $bank_card_types = BankCardType::with('bank')->latest()->paginate(10);
         return $this->showDataResponse('bank_card_types', $bank_card_types);
     }
 
@@ -22,12 +22,13 @@ class BankCardTypeController extends ApiController
     {
         $request['created_by'] = Auth::id() ?? 0;
         $request['updated_by'] = Auth::id() ?? 0;
+        $request['slug'] = $request->name .'-' . time();
+        $request['status'] = $request->status ? 1 : 0 ;
 
-        $only = $request->only('bank_id', 'name', 'created_by', 'updated_by', 'status');
+        $only = $request->only('bank_id', 'name', 'created_by', 'updated_by', 'slug', 'status');
         $bank_card_type = BankCardType::create($only);
 
         return $this->showDataResponse('bank_card_type', $bank_card_type, 201);
-
     }
 
     public function show(BankCardType $bankCardType)

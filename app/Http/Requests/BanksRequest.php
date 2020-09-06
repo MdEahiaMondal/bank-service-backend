@@ -23,12 +23,11 @@ class BanksRequest extends FormRequest
     public function rules()
     {
         $id = isset($this->bank) ? $this->bank->id : null;
+
         $rules = [
-            'name' => 'required|max:255|unique:banks,name,'.$id,
+            'name' => 'required|max:255|unique:banks,name,' . $id,
             'location' => 'required|max:255',
-            'status' => 'nullable|boolean'
         ];
         return $rules;
-
     }
 }

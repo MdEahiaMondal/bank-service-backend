@@ -17,7 +17,8 @@ class CreateBankCardTypesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('bank_id');
             $table->string('name', 255);
-            $table->string('status');
+            $table->string('slug', 255);
+            $table->boolean('status')->default(false);
             $table->integer('created_by');
             $table->integer('updated_by');
             $table->softDeletes();

@@ -12,8 +12,16 @@ class BankCardType extends Model
     protected $fillable = [
         'bank_id',
         'name',
+        'slug',
         'created_by',
         'updated_by',
         'status',
     ];
+
+
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class);
+    }
+
 }
