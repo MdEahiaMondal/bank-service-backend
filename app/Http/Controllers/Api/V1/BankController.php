@@ -62,6 +62,8 @@ class BankController extends ApiController
 
     public function show(Bank $bank)
     {
+        $bank = Bank::with('createdUser')
+            ->findOrFail($bank->id);
         return $this->showDataResponse('bank', $bank);
     }
 

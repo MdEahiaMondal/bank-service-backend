@@ -30,6 +30,9 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'api'], function () {
     Route::get('banks/status-change/{slug}', 'BankController@changeStatus')->name(' banks.status');
     Route::get('banks-search', 'BankController@liveSearchBanks');
 
+    Route::get('bank/cards-search', 'BankCardController@liveSearchBankCards')->name('cards.search');
+    Route::resource('banks.cards', 'BankCardController')->scoped(['bank' => 'slug', 'card' => 'slug'])->except(['create']);
+
 
 
 
@@ -38,14 +41,6 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'api'], function () {
     Route::get('slider-status-change/{slug}', 'SliderController@changeStatus');
     Route::get('sliders-search', 'SliderController@liveSearchSlider');
 
-
-
-
-
-
-
-
-    Route::apiResource('banks.cards', 'BankCardTypeController');
 
     /*;
     Route::get('banks-paginate', 'BankController@getAllbanksPaginate');*/

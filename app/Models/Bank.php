@@ -33,9 +33,9 @@ class Bank extends Model
         return  url('/') . Storage::url( 'banks/'.$this->image);
     }
 
-    public function bankCards()
+    public function cards()
     {
-        return $this->hasMany(BankCardType::class);
+        return $this->hasMany(Card::class, 'bank_id');
     }
 
     public function createdUser()

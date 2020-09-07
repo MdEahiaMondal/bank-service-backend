@@ -2,26 +2,27 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class BankCardType extends Model
+class Card extends Model
 {
-    use SoftDeletes;
-
     protected $fillable = [
         'bank_id',
         'name',
         'slug',
+        'status',
         'created_by',
         'updated_by',
-        'status',
     ];
 
 
-    public function bank()
-    {
+    public function bank(){
         return $this->belongsTo(Bank::class);
+    }
+
+    public function createdBy(){
+        return $this->belongsTo(User::class, 'created_by');
     }
 
 }

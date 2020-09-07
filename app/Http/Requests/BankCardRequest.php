@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BankCardTypesRequest extends FormRequest
+class BankCardRequest extends FormRequest
 {
 
     public function authorize()
@@ -16,7 +16,6 @@ class BankCardTypesRequest extends FormRequest
     {
         $rules = [
             'name' => 'required|string|max:255',
-            'bank_id' => 'required|integer',
         ];
         return $rules;
     }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBankCardTypesTable extends Migration
+class CreateCardsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateBankCardTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('bank_card_types', function (Blueprint $table) {
+        Schema::create('cards', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('bank_id');
             $table->string('name', 255);
@@ -33,6 +33,6 @@ class CreateBankCardTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bank_card_types');
+        Schema::dropIfExists('cards');
     }
 }
