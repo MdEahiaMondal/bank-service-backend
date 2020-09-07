@@ -34,7 +34,7 @@ class SliderController extends ApiController
 
         $request['created_by'] = Auth::id() ?? 1;
         $request['updated_by'] = Auth::id() ?? 1;
-        $request['slug'] = $request->title . '-' . time();
+        $request['slug'] = $request->title;
         $request['status'] = $request->status ? 1 : 0;
 
         $only = $request->only('title', 'slug', 'image', 'created_by', 'updated_by', 'status');
@@ -44,59 +44,43 @@ class SliderController extends ApiController
         return $this->showDataResponse('slider', $slider, 201, 'Slider created success');
     }
 
-    public function show($slug)
+    public function show(Slider $slider)
     {
-        $slider = Slider::where('slug', $slug)->first();
-        if ($slider) {
-            return $this->showDataResponse('slider', $slider, 200);
-        } else {
-            return $this->errorResponse('Not Found', 404);
-        }
+        return $this->showDataResponse('slider', $slider, 200);
     }
 
-    public function update(SlidersRequest $request, $slug)
+    public function update(SlidersRequest $request, Slider $slider)
     {
-        $slider = Slider::where('slug', $slug)->first();
-        if ($slider) {
-            $slug = Str::slug($request->title);
-            if ($request->hasFile('photo')) {
-                $image = $request->file('photo');
-                $image_name = CommonController::fileUploaded(
-                    $slug,
-                    false,
-                    $image,
-                    'sliders',
-                    ['width' => '1600', 'height' => '1066',],
-                    $slider->image
-                );
-                $request['image'] = $image_name;
-            } else {
-                $request['image'] = $slider->image;
-            }
-            $request['updated_by'] = Auth::id() ?? 0;
-
-            $only = $request->only('title', 'image', 'updated_by');
-
-            $slider->update($only);
-            return $this->showDataResponse('slider', $slider, 200);
-
+        $slug = Str::slug($request->title);
+        if ($request->hasFile('photo')) {
+            $image = $request->file('photo');
+            $image_name = CommonController::fileUploaded(
+                $slug,
+                false,
+                $image,
+                'sliders',
+                ['width' => '1600', 'height' => '1066',],
+                $slider->image
+            );
+            $request['image'] = $image_name;
         } else {
-            return $this->errorResponse('Not Found', 404);
+            $request['image'] = $slider->image;
         }
+        $request['updated_by'] = Auth::id() ?? 0;
+
+        $only = $request->only('title', 'image', 'updated_by');
+
+        $slider->update($only);
+        return $this->showDataResponse('slider', $slider, 200, 'Slider updated success');
     }
 
-    public function destroy($slug)
+    public function destroy(Slider $slider)
     {
-        $slider = Slider::where('slug', $slug)->first();
-        if ($slider) {
-            if ($slider->image) {
-                CommonController::deleteImage('sliders', $slider->image);
-            }
-            $slider->delete();
-            return $this->successResponse('Slider deleted success');
-        } else {
-            return $this->errorResponse('Not Found', 404);
+        if ($slider->image) {
+            CommonController::deleteImage('sliders', $slider->image);
         }
+        $slider->delete();
+        return $this->successResponse('Slider deleted success');
     }
 
 

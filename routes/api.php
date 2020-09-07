@@ -33,6 +33,14 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'api'], function () {
 
 
 
+    // start slider
+    Route::resource('sliders', 'SliderController')->scoped(['slider' => 'slug'])->except(['create']);;
+    Route::get('slider-status-change/{slug}', 'SliderController@changeStatus');
+    Route::get('sliders-search', 'SliderController@liveSearchSlider');
+
+
+
+
 
 
 
@@ -42,10 +50,6 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'api'], function () {
     /*;
     Route::get('banks-paginate', 'BankController@getAllbanksPaginate');*/
 
-    // start slider
-    Route::apiResource('sliders', 'SliderController');
-    Route::get('slider-status/{slug}', 'SliderController@changeStatus');
-    Route::get('sliders-search', 'SliderController@liveSearchSlider');
 
     // start bank admin
     Route::apiResource('bank-admins', 'BankAdminController');
