@@ -15,6 +15,6 @@ $factory->define(Card::class, function (Faker $faker) {
         'name' => $name,
         'slug' => Str::slug($name),
         'status' => rand(1,0),
-        'created_by' => User::all()->random()->id,
-        'updated_by' => User::all()->random()->id,
+        'created_by' => 1,
+        'updated_by' => 1,
     ];});

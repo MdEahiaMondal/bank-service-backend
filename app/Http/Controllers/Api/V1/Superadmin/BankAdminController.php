@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\V1\Superadmin;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\CommonController;
@@ -56,7 +56,7 @@ class BankAdminController extends ApiController
         $request['status'] = 1;
         $request['created_by'] = Auth::id() ?? 1;
         $request['updated_by'] = Auth::id() ?? 1;
-        $request['slug'] = $request->name . '-' . time();
+        $request['slug'] = $request->name;
 
         $user_only = $request->only(
             'name',

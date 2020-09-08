@@ -21,7 +21,7 @@ class BankAdminsRequest extends FormRequest
     {
         $id = isset($this->id) ? $this->id : null;
         $rules = [
-            'name' => 'required|string|max:100',
+            'name' => 'required|string|max:100|unique:users,name,'.$id,
             'email' => 'required|email|max:80|unique:users,email,'.$id,
             'phone' => 'nullable|string|max:20|min:5',
             'present_address' => 'nullable|string',

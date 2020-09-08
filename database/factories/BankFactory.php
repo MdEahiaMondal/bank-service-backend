@@ -15,7 +15,7 @@ $factory->define(Bank::class, function (Faker $faker) {
         'image' => $faker->imageUrl(200,200),
         'location' => $faker->address,
         'status' => rand(1,0),
-        'created_by' => User::all()->random()->id,
-        'updated_by' => User::all()->random()->id,
+        'created_by' => 1,
+        'updated_by' => 1,
     ];
 });

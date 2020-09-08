@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\V1\Superadmin;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\CommonController;
