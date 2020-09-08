@@ -101,13 +101,25 @@ class BankCardController extends ApiController
     }
 
 
-    public function liveSearchBankCards(Request  $request){
+    public function liveSearchBankCards(Request  $request, $bank_slug){
 
-        $bank_cards = Card::with('bank', 'createdBy')
-            ->where('name', 'like', '%' .$request->text. '%')
-            ->latest()
-            ->paginate(10);
-        return $this->showDataResponse('bank_cards', $bank_cards);
+       $bank = Bank::where('slug', $bank_slug)->first();
+       if ($bank){
+           $bank_cards = Card::with('bank', 'createdBy')
+               ->where('bank_id', '=', $bank->id)
+               ->where('name', 'like', '%' .$request->text. '%')
+               ->latest()
+               ->paginate(10);
+
+           if ($bank_cards->count() > 0){
+               return $this->showDataResponse('bank_cards', $bank_cards);
+           }else{
+               return $this->errorResponse('Does not exist bank with the specified identificator', 404);
+           }
+       }else{
+           return $this->errorResponse('Does not exist bank with the specified identificator', 404);
+       }
+
     }
 
 }

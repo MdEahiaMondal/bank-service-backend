@@ -30,7 +30,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware' => 'api'], function () {
     Route::get('banks/status-change/{slug}', 'BankController@changeStatus')->name(' banks.status');
     Route::get('banks-search', 'BankController@liveSearchBanks');
 
-    Route::get('bank/cards-search', 'BankCardController@liveSearchBankCards')->name('cards.search');
+
+    Route::get('banks/{bank}/cards-search', 'BankCardController@liveSearchBankCards')->name('cards.search');
     Route::resource('banks.cards', 'BankCardController')->scoped(['bank' => 'slug', 'card' => 'slug'])->except(['create']);
 
 
