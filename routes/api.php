@@ -23,7 +23,7 @@ Route::post('auth/forgot-password', 'AuthController@forgotPassword');
 
 
 // start supper admin area
-Route::group(['namespace' => 'Api\V1\Superadmin'], function () {
+Route::group(['namespace' => 'Api\V1\Superadmin', 'middleware' => ['superadmin', 'api']], function () {
 
     // start bank
     Route::resource('banks', 'BankController')->scoped(['bank' => 'slug'])->except(['create']);
@@ -49,20 +49,10 @@ Route::group(['namespace' => 'Api\V1\Superadmin'], function () {
 
 
 
-
-
-
+// start bank admin area
 Route::group(['namespace' => 'Api\V1', 'middleware' => 'api'], function () {
-
-/*start supper admin work*/
-
-
-
-    // start bank card type
 
     Route::apiResource('card-or-loans', 'CardOrLoanController');
 
-
-    /*end supper admin work*/
-
 });
+// end bank admin area
