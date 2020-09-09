@@ -18,12 +18,13 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
 
 
 // without authorization user can access
-Route::post('auth/forgot-password', 'AuthController@forgotPassword');
+Route::post('auth/forgot-password', 'Api\V1\Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::post('auth/reset-password', 'Api\V1\Auth\ResetPasswordController@reset');
 
 
 
 // start supper admin area
-Route::group(['namespace' => 'Api\V1\Superadmin', 'middleware' => ['superadmin', 'api']], function () {
+Route::group(['namespace' => 'Api\V1\Superadmin', 'middleware' => ['api']], function () {
 
     // start bank
     Route::resource('banks', 'BankController')->scoped(['bank' => 'slug'])->except(['create']);
