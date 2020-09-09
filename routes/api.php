@@ -49,10 +49,14 @@ Route::group(['namespace' => 'Api\V1\Superadmin', 'middleware' => ['superadmin',
 
 
 
+
+
+
 // start bank admin area
 Route::group(['namespace' => 'Api\V1', 'middleware' => 'api'], function () {
 
-    Route::apiResource('card-or-loans', 'CardOrLoanController');
+    Route::get('card-or-loan/banks', 'LoanController@getAllBank');
+    Route::apiResource('users.loans', 'LoanController')->scoped(['user' => 'slug']);
 
 });
 // end bank admin area

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCardOrLoansTable extends Migration
+class CreateLoansTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCardOrLoansTable extends Migration
      */
     public function up()
     {
-        Schema::create('card_or_loans', function (Blueprint $table) {
+        Schema::create('loans', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('bank_id');
@@ -26,7 +26,7 @@ class CreateCardOrLoansTable extends Migration
             $table->string('cash_payment_by_bank', 255);
             $table->string('a_t', 100);
             $table->float('loan_limit_amount');
-            $table->string('secondary_bank_loan', 10)->default("no");
+            $table->tinyInteger('secondary_bank_loan')->default(0);
             $table->string('secondary_bank_name', 255)->nullable();
             $table->float('secondary_bank_amount')->nullable();
             $table->string('secondary_bank_address', 255)->nullable();
@@ -37,7 +37,7 @@ class CreateCardOrLoansTable extends Migration
             $table->string('job_id_card', 1024);
             $table->string('visiting_card', 1024);
             $table->string('status');
-            $table->string('apply_for');
+            $table->string('apply_for', 100);
             $table->integer('created_by');
             $table->integer('updated_by');
             $table->softDeletes();
@@ -52,6 +52,6 @@ class CreateCardOrLoansTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('card_or_loans');
+        Schema::dropIfExists('loans');
     }
 }

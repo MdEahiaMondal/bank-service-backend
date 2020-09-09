@@ -4,26 +4,34 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\CommonController;
-use App\Http\Requests\CardOrLoansRequest;
-use App\Models\CardOrLoan;
+use App\Http\Requests\LoansRequest;
+use App\Models\Bank;
+use App\Models\Loan;
+use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-class CardOrLoanController extends ApiController
+class LoanController extends ApiController
 {
-
     public function index()
     {
-        $card_or_loans = CardOrLoan::paginate(10);
+        $card_or_loans = Loan::paginate(10);
         return $this->showDataResponse('card_or_loans', $card_or_loans);
     }
 
-    public function store(Request $request)
+
+    public function getAllBank()
     {
-        info($request->all());
-        return 'ok';
+        $banks = Bank::active()
+            ->select(['name', 'id'])
+            ->get();
+        return $this->showDataResponse('card_or_load_banks', $banks, 200);
+    }
+
+    public function store(LoansRequest $request, User $user)
+    {
+        return $request->all();
 
         $slug = Str::slug($request->office_name);
 
@@ -72,24 +80,24 @@ class CardOrLoanController extends ApiController
             'visiting_card', 'nid_card', 'created_by', 'updated_by'
         );
 
-        $cardOrLoan = CardOrLoan::create($only);
+        $loan = Loan::create($only);
 
-        return $this->showDataResponse('cardOrLoan', $cardOrLoan, 201);
+        return $this->showDataResponse('cardOrLoan', $loan, 201);
     }
 
-    public function show(CardOrLoan $cardOrLoan)
+    public function show(Loan $loan)
     {
-        return $this->showDataResponse('cardOrLoan', $cardOrLoan, 200);
+        return $this->showDataResponse('cardOrLoan', $loan, 200);
     }
 
-    public function update(CardOrLoansRequest $request, CardOrLoan $cardOrLoan)
+    public function update(LoansRequest $request, Loan $loan)
     {
         $slug = Str::slug($request->office_name);
 
         if($request->hasFile('salary_certificate')){
             $file = $request->file('salary_certificate_test');
             //get old file
-            $oldFile = $cardOrLoan->salary_certificate;
+            $oldFile = $loan->salary_certificate;
             $file_name = CommonController::PdfFileUpload($file, $slug, $oldFile);
             $request['salary_certificate'] = $file_name;
         }
@@ -97,7 +105,7 @@ class CardOrLoanController extends ApiController
         if($request->hasFile('job_id_card')){
             $file = $request->file('job_id_card');
             //get old file
-            $oldFile = $cardOrLoan->job_id_card;
+            $oldFile = $loan->job_id_card;
             $file_name = CommonController::PdfFileUpload($file, $slug, $oldFile);
             $request['job_id_card'] = $file_name;
         }
@@ -105,7 +113,7 @@ class CardOrLoanController extends ApiController
         if($request->hasFile('visiting_card')){
             $file = $request->file('visiting_card');
             //get old file
-            $oldFile = $cardOrLoan->visiting_card;
+            $oldFile = $loan->visiting_card;
             $file_name = CommonController::PdfFileUpload($file, $slug, $oldFile);
             $request['visiting_card'] = $file_name;
         }
@@ -114,7 +122,7 @@ class CardOrLoanController extends ApiController
         if($request->hasFile('nid_card')){
             $file = $request->file('nid_card');
             //get old file
-            $oldFile = $cardOrLoan->nid_card;
+            $oldFile = $loan->nid_card;
             $file_name = CommonController::PdfFileUpload($file, $slug, $oldFile);
             $request['nid_card'] = $file_name;
         }
@@ -139,28 +147,28 @@ class CardOrLoanController extends ApiController
             'visiting_card', 'nid_card', 'updated_by'
         );
 
-        $cardOrLoan->update($only);
+        $loan->update($only);
 
-        return $this->showDataResponse('cardOrLoan', $cardOrLoan,201);
+        return $this->showDataResponse('cardOrLoan', $loan,201);
     }
 
-    public function destroy(CardOrLoan $cardOrLoan)
+    public function destroy(Loan $loan)
     {
         $directory = public_path().'/storage/Uploaded_files/';
-        if ($cardOrLoan->salary_certificate) {
-            CommonController::deleteFile($cardOrLoan->salary_certificate, $directory);
+        if ($loan->salary_certificate) {
+            CommonController::deleteFile($loan->salary_certificate, $directory);
         }
-        if ($cardOrLoan->job_id_card) {
-            CommonController::deleteFile($cardOrLoan->job_id_card, $directory);
+        if ($loan->job_id_card) {
+            CommonController::deleteFile($loan->job_id_card, $directory);
         }
-        if ($cardOrLoan->visiting_card) {
-            CommonController::deleteFile($cardOrLoan->visiting_card, $directory);
+        if ($loan->visiting_card) {
+            CommonController::deleteFile($loan->visiting_card, $directory);
         }
-        if ($cardOrLoan->nid_card) {
-            CommonController::deleteFile($cardOrLoan->nid_card, $directory);
+        if ($loan->nid_card) {
+            CommonController::deleteFile($loan->nid_card, $directory);
         }
 
-        $cardOrLoan->delete();
+        $loan->delete();
         return $this->successResponse('Slider deleted success');
     }
 }

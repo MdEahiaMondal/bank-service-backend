@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\BankAdmin;
+use App\Models\Loan;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -75,6 +76,13 @@ class User extends Authenticatable implements JWTSubject
     public function bankAdmin(){
         return $this->hasOne(BankAdmin::class);
     }
+
+
+    public function loans()
+    {
+        return $this->hasMany(Loan::class, 'user_id');
+    }
+
 
 
 }

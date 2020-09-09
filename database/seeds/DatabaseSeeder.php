@@ -20,6 +20,6 @@ class DatabaseSeeder extends Seeder
         factory(User::class, 20)->create();
         factory(Bank::class, 50)->create();
         factory(Card::class, 200)->create();
-        factory(CardOrLoan::class, 200)->create();
+//        factory(CardOrLoan::class, 200)->create();
     }
 }
