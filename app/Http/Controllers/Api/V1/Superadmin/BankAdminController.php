@@ -46,7 +46,7 @@ class BankAdminController extends ApiController
 
             $image = $request->file('photo');
             $image_name = CommonController::fileUploaded(
-                $slug, false, $image, 'bank_admins', ['width' => '128', 'height' => '128']
+                $slug, false, $image, 'users', ['width' => '128', 'height' => '128']
             );
             $request['image'] = $image_name;
         }
@@ -128,11 +128,11 @@ class BankAdminController extends ApiController
             if ($request->hasFile('photo')) {
                 $image = $request->file('photo');
                 $image_name = CommonController::fileUploaded(
-                    $slug, false, $image, 'bank_admins', ['width' => '128', 'height' => '128']
+                    $slug, false, $image, 'users', ['width' => '128', 'height' => '128']
                 );
                 $request['image'] = $image_name;
                 if ($bank_admin->image) {
-                    CommonController::deleteImage('bank_admins', $bank_admin->image);
+                    CommonController::deleteImage('users', $bank_admin->image);
                 }
             }
 
@@ -172,7 +172,7 @@ class BankAdminController extends ApiController
             ->where(['user_type' => 'bank-admin', 'slug' => $slug])->first();
         if ($bank_admin) {
             if ($bank_admin->image) {
-                CommonController::deleteImage('bank_admins', $bank_admin->image);
+                CommonController::deleteImage('users', $bank_admin->image);
             }
             $bank_admin->delete();
             return $this->successResponse('Bank admin deleted success');

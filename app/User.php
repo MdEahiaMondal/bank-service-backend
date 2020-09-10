@@ -54,7 +54,7 @@ class User extends Authenticatable implements JWTSubject
     protected $appends = ['image_url'];
 
     public function getImageUrlAttribute(){
-        return  url('/') . Storage::url( 'bank_admins/'.$this->image);
+        return  url('/') . Storage::url( 'users/'.$this->image);
     }
 
     public function setSlugAttribute($value)

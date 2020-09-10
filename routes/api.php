@@ -12,14 +12,16 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
     Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout');
-    Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
+    Route::post('update-info/{user}', 'AuthController@infoUpdate');
+    Route::post('update-password/{user}', 'AuthController@passwordUpdate');
 });
 
 
 // without authorization user can access
 Route::post('auth/forgot-password', 'Api\V1\Auth\ForgotPasswordController@sendResetLinkEmail');
 Route::post('auth/reset-password', 'Api\V1\Auth\ResetPasswordController@reset');
+Route::post('auth/refresh', 'AuthController@refresh');
 
 
 

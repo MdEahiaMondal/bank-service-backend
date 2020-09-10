@@ -15,20 +15,21 @@ class AuthController extends ApiController
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register', 'forgotPassword']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'forgotPassword', 'refresh']]);
     }
 
-    public function register(UserRegisterRequest  $request){
+    public function register(UserRegisterRequest $request)
+    {
 
-            $user = new User();
-            $user->name = $request->name;
-            $user->slug = Str::slug($request->name);
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);
+        $user = new User();
+        $user->name = $request->name;
+        $user->slug = Str::slug($request->name);
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
 
-            if ($user->save()){
-                return $this->login($request);
-            }
+        if ($user->save()) {
+            return $this->login($request);
+        }
 
     }
 
@@ -45,7 +46,7 @@ class AuthController extends ApiController
             return $this->respondWithToken($token);
         }
 
-        return  $this->errorResponse('Email or Password is invalid', 401);
+        return $this->errorResponse('Email or Password is invalid', 401);
     }
 
 
@@ -62,7 +63,7 @@ class AuthController extends ApiController
     }
 
 
-    public function forgotPassword(Request  $request)
+    public function forgotPassword(Request $request)
     {
         $this->validate($request, [
             'email' => 'required|email'
@@ -93,4 +94,71 @@ class AuthController extends ApiController
     {
         return Auth::guard();
     }
+
+
+    public function infoUpdate(Request $request, $slug)
+    {
+        $user = User::where('slug', $slug)->first();
+
+        $this->validate($request, [
+            'name' => 'required|max:100|unique:users,email,' . $request->id,
+            'email' => 'required|max:80|unique:users,email,' . $request->id,
+            'phone' => 'nullable|max:50',
+            'permanent_address' => 'nullable',
+            'present_address' => 'nullable',
+        ]);
+
+        if ($request->hasFile('photo')) {
+            $this->validate($request, [
+                'photo' => 'required|mimes:pdf,jpeg,png,jpg|max:1024',
+            ]);
+
+            $image = $request->file('photo');
+            $image_name = CommonController::fileUploaded(
+                $slug, false, $image, 'users', ['width' => '128', 'height' => '128', $user->image]
+            );
+            $request['image'] = $image_name;
+        } else {
+            $request['image'] = $user->image;
+        }
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'image' => $request->image,
+            'permanent_address' => $request->permanent_address,
+            'present_address' => $request->present_address,
+        ]);
+        return $this->showDataResponse('user_info', $user, 200, 'User info updated success');
+
+    }
+
+
+    public function passwordUpdate(Request  $request, $slug)
+    {
+        $this->validate($request, [
+            'current_password' => 'required',
+            'password' => 'required|confirmed',
+        ]);
+        $user = User::where('slug', $slug)->first();
+
+        if ($user->id === Auth::id()){
+            if (Hash::check($request->current_password , Auth::user()->password)) {
+                if (!Hash::check($request->password , Auth::user()->password)) {
+                    $user->password = Hash::make($request->password);
+                    $user->save();
+                    return  $this->successResponse('Successfully password changed', 200);
+                }else{
+                    return  $this->errorResponse('Current password and new password is same..',  208);
+                }
+            }
+            else{
+               return  $this->errorResponse('Current password doesnt matched ', 404);
+            }
+        }
+
+    }
+
+
 }
